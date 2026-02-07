@@ -67462,6 +67462,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 578353679}
+  - component: {fileID: 578353681}
   - component: {fileID: 578353678}
   - component: {fileID: 578353677}
   - component: {fileID: 578353676}
@@ -67625,6 +67626,20 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &578353681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 578353675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a331a4a66fe45a14780220539044269c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MainCameraController
+  vcam: {fileID: 633087468}
+  rotationY: 0
 --- !u!1001 &578549102
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -74151,6 +74166,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4648723947822366, guid: cae1c39e81a87cf41861524f7d819c45, type: 3}
   m_PrefabInstance: {fileID: 632219080}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &633087468 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8276030855967411707, guid: 50218a68f2c7c3c4e89b0053974fd59a, type: 3}
+  m_PrefabInstance: {fileID: 1764430651}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &633578564
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -205398,6 +205424,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8276030855778169940, guid: 50218a68f2c7c3c4e89b0053974fd59a, type: 3}
+      propertyPath: m_TrackedObjectOffset.z
+      value: -2
+      objectReference: {fileID: 0}
     - target: {fileID: 8276030855967411704, guid: 50218a68f2c7c3c4e89b0053974fd59a, type: 3}
       propertyPath: m_Name
       value: ThirdPersonCineMachine
@@ -254547,6 +254577,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   movementSpeed: 4
+  MCC: {fileID: 578353681}
 --- !u!1 &6088228850448772834
 GameObject:
   m_ObjectHideFlags: 0
