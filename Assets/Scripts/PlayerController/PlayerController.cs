@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public MainCameraController MCC;
     public float rotSpeed = 600f;
     private Quaternion requiredRotation;
+    private bool PC = true;
 
     [Header("Player Animator")] 
     public Animator animator;
@@ -24,6 +25,11 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (PC && CC.enabled)
+            PlayerMovement();
+        if (!PC)
+            return;
+        
         if (onSurface)
         {
             fallingSpeed = 0f;
@@ -36,7 +42,6 @@ public class PlayerController : MonoBehaviour
         var velocity = moveDir * movementSpeed;
         velocity.y = fallingSpeed;
         
-        PlayerMovement();
         SurfaceCheck();
     }
 
@@ -75,5 +80,17 @@ public class PlayerController : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(transform.TransformPoint(surfaceCheckOffset), surfaceCheckRadius);
+    }
+
+    public void SetControl(bool hasControl)
+    {
+        PC = hasControl;
+        CC.enabled = hasControl;
+
+        if (!hasControl)
+        {
+            animator.SetFloat("movementValue", 0f);
+            requiredRotation = transform.rotation;
+        }
     }
 }

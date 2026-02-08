@@ -4,6 +4,7 @@ public class EnvironmentChecker : MonoBehaviour
 {
     public Vector3 rayOffset = new Vector3(0, 0.2f, 0);
     public float rayLength = 0.9f;
+    public float heightRayLength = 6f;
     public LayerMask obstacleLayer;
 
     public ObstacleInfo CheckObstacle()
@@ -14,6 +15,14 @@ public class EnvironmentChecker : MonoBehaviour
         hitData.hitFound = Physics.Raycast(rayOrigin, transform.forward, out hitData.hitInfo, rayLength, obstacleLayer);
         
         Debug.DrawRay(rayOrigin, transform.forward * rayLength, hitData.hitFound ? Color.red : Color.green);
+
+        if (hitData.hitFound)
+        {
+            var heightOrigin = hitData.hitInfo.point + Vector3.up * heightRayLength;
+            hitData.heightHitFound = Physics.Raycast(heightOrigin, Vector3.down, out hitData.heightInfo, heightRayLength, obstacleLayer);
+            
+            Debug.DrawRay(heightOrigin, Vector3.down * heightRayLength, hitData.heightHitFound ? Color.blue : Color.green);
+        }
         
         return hitData;
     }
@@ -22,5 +31,7 @@ public class EnvironmentChecker : MonoBehaviour
 public struct ObstacleInfo
 {
     public bool hitFound;
+    public bool heightHitFound;
     public RaycastHit hitInfo;
+    public RaycastHit heightInfo;
 }
