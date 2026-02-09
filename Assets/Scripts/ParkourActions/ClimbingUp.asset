@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: ClimbingUp
   m_EditorClassIdentifier: Assembly-CSharp::NewParkourAction
   animationName: ClimbingUp
+  barrierTag: 
   minimumHeight: 2
   maximumHeight: 5
   lookAtObstacle: 1
+  parkourActionDelay: 0.5
   allowTargetMatching: 1
   compareBodyPart: 5
   compareStartTime: 0.08

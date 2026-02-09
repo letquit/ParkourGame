@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca400d625c8b6084eb7fc804b56e4549, type: 3}
-  m_Name: HighJumpUp
+  m_Name: VaultJump
   m_EditorClassIdentifier: Assembly-CSharp::NewParkourAction
-  animationName: HighJumpUp
-  barrierTag: 
+  animationName: VaultJump
+  barrierTag: Barrier
   minimumHeight: 0.6
-  maximumHeight: 1.2
+  maximumHeight: 1.6
   lookAtObstacle: 1
   parkourActionDelay: 0
   allowTargetMatching: 1
-  compareBodyPart: 3
-  compareStartTime: 0.19
-  compareEndTime: 0.97
+  compareBodyPart: 4
+  compareStartTime: 0.12
+  compareEndTime: 0.31
   comparePositionWeight: {x: 0, y: 1, z: 1}

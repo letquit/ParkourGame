@@ -75,9 +75,16 @@ public class ParkourControllerScript : MonoBehaviour
                 CompareTarget(action);
             }
 
+            if (animator.IsInTransition(0) && timeCounter > 0.5f)
+            {
+                break;
+            }
+
             yield return null;
         }
 
+        yield return new WaitForSeconds(action.ParkourActionDelay);
+        
         // 在 yield 循环后，恢复控制权前
         playerController.SetControl(true);
 

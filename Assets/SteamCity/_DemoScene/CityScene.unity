@@ -136692,6 +136692,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: painted_barrier
       objectReference: {fileID: 0}
+    - target: {fileID: 114438, guid: 5f1bb2cacf6d4ca4c878049b803fd391, type: 3}
+      propertyPath: m_TagString
+      value: Barrier
+      objectReference: {fileID: 0}
     - target: {fileID: 492470, guid: 5f1bb2cacf6d4ca4c878049b803fd391, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.8
@@ -136743,6 +136747,22 @@ PrefabInstance:
     - target: {fileID: 492470, guid: 5f1bb2cacf6d4ca4c878049b803fd391, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555700, guid: 5f1bb2cacf6d4ca4c878049b803fd391, type: 3}
+      propertyPath: m_Size.x
+      value: 0.30961037
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555700, guid: 5f1bb2cacf6d4ca4c878049b803fd391, type: 3}
+      propertyPath: m_Center.x
+      value: 0.019774437
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555700, guid: 5f1bb2cacf6d4ca4c878049b803fd391, type: 3}
+      propertyPath: m_Center.y
+      value: 0.8445018
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555700, guid: 5f1bb2cacf6d4ca4c878049b803fd391, type: 3}
+      propertyPath: m_Center.z
+      value: -0.0022411346
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -148459,6 +148479,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: warning_sign
       objectReference: {fileID: 0}
+    - target: {fileID: 128852, guid: a2bef607e5bbd014d8d69755562c0d35, type: 3}
+      propertyPath: m_TagString
+      value: Barrier1
+      objectReference: {fileID: 0}
     - target: {fileID: 420576, guid: a2bef607e5bbd014d8d69755562c0d35, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.8
@@ -148507,7 +148531,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 6511588, guid: a2bef607e5bbd014d8d69755562c0d35, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6589296, guid: a2bef607e5bbd014d8d69755562c0d35, type: 3}
+      propertyPath: m_Size.y
+      value: 1.8721682
+      objectReference: {fileID: 0}
+    - target: {fileID: 6589296, guid: a2bef607e5bbd014d8d69755562c0d35, type: 3}
+      propertyPath: m_Center.y
+      value: 0.8776209
+      objectReference: {fileID: 0}
+    - target: {fileID: 6589296, guid: a2bef607e5bbd014d8d69755562c0d35, type: 3}
+      propertyPath: m_Center.z
+      value: -0.0022382736
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6511588, guid: a2bef607e5bbd014d8d69755562c0d35, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -203164,6 +203205,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: barrier
       objectReference: {fileID: 0}
+    - target: {fileID: 141466, guid: 9fa4100b047a1684aa8e98446ca97e12, type: 3}
+      propertyPath: m_TagString
+      value: Barrier
+      objectReference: {fileID: 0}
     - target: {fileID: 416294, guid: 9fa4100b047a1684aa8e98446ca97e12, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.8
@@ -203215,6 +203260,22 @@ PrefabInstance:
     - target: {fileID: 416294, guid: 9fa4100b047a1684aa8e98446ca97e12, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567252, guid: 9fa4100b047a1684aa8e98446ca97e12, type: 3}
+      propertyPath: m_Size.x
+      value: 0.27119637
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567252, guid: 9fa4100b047a1684aa8e98446ca97e12, type: 3}
+      propertyPath: m_Center.x
+      value: 0.009636879
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567252, guid: 9fa4100b047a1684aa8e98446ca97e12, type: 3}
+      propertyPath: m_Center.y
+      value: 0.84240496
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567252, guid: 9fa4100b047a1684aa8e98446ca97e12, type: 3}
+      propertyPath: m_Center.z
+      value: 0.00041231513
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -261330,7 +261391,7 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
+  m_Height: 1.9
   m_Radius: 0.2
   m_SlopeLimit: 45
   m_StepOffset: 0.4
@@ -261355,6 +261416,8 @@ MonoBehaviour:
   playerController: {fileID: 6052545359968065114}
   newParkourAction:
   - {fileID: 11400000, guid: f058d2a8564b2d443a94d330597190e1, type: 2}
+  - {fileID: 11400000, guid: 8826b29f828310b4e8c1fc357a1c4986, type: 2}
+  - {fileID: 11400000, guid: 629afa9e4fb968f4ab04207664fd752c, type: 2}
   - {fileID: 11400000, guid: d23d5d5d03123a84683d5dd3598d3d0b, type: 2}
   - {fileID: 11400000, guid: dcfca3f79fe04854bbf95a5937e583b4, type: 2}
 --- !u!114 &6052545359968065117
