@@ -10,6 +10,7 @@ public class ParkourControllerScript : MonoBehaviour
     private bool playerInAction;
     public Animator animator;
     public PlayerController playerController;
+    [SerializeField] private NewParkourAction jumpDownParkourAction;
 
     [Header("Parkour Action Area")]
     public List<NewParkourAction> newParkourAction;
@@ -31,6 +32,15 @@ public class ParkourControllerScript : MonoBehaviour
                         break;
                     }
                 }
+            }
+        }
+
+        if (playerController.playerOnLedge && !playerInAction && Input.GetButtonDown("Jump"))
+        {
+            if (playerController.LedgeInfo.angle <= 50)
+            {
+                playerController.playerOnLedge = false;
+                StartCoroutine(PerformParkourAction(jumpDownParkourAction));
             }
         }
     }
@@ -89,10 +99,8 @@ public class ParkourControllerScript : MonoBehaviour
         playerController.SetControl(true);
 
         // 重置PlayerController物理状态，让它跟动画驱动的结果完全一致
-        playerController.fallingSpeed = 0f; // 让角色不再有垂直下落速度
-        playerController.moveDir = Vector3.zero; // 防止有残余运动向量
-
-        // TODO:
+        // playerController.fallingSpeed = 0f; // 让角色不再有垂直下落速度
+        // playerController.moveDir = Vector3.zero; // 防止有残余运动向量
         
         // transform.position = action.ComparePosition;
 
