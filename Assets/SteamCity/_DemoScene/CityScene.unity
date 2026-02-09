@@ -34380,7 +34380,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4280916944181808, guid: 49870800cbacf6446adcd46357ca4e49, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4280916944181808, guid: 49870800cbacf6446adcd46357ca4e49, type: 3}
       propertyPath: m_LocalScale.z
@@ -261356,6 +261356,7 @@ MonoBehaviour:
   newParkourAction:
   - {fileID: 11400000, guid: f058d2a8564b2d443a94d330597190e1, type: 2}
   - {fileID: 11400000, guid: d23d5d5d03123a84683d5dd3598d3d0b, type: 2}
+  - {fileID: 11400000, guid: dcfca3f79fe04854bbf95a5937e583b4, type: 2}
 --- !u!114 &6052545359968065117
 MonoBehaviour:
   m_ObjectHideFlags: 0

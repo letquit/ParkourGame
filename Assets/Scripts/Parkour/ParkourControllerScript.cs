@@ -94,7 +94,12 @@ public class ParkourControllerScript : MonoBehaviour
 
     private void CompareTarget(NewParkourAction action)
     {
-        animator.MatchTarget(action.ComparePosition, transform.rotation, action.CompareBodyPart,
-            new MatchTargetWeightMask(new Vector3(0, 1, 0), 0), action.CompareStartTime, action.CompareEndTime);
+        animator.MatchTarget(
+            action.ComparePosition,
+            transform.rotation,
+            action.CompareBodyPart,
+            new MatchTargetWeightMask(action.ComparePositionWeight, 0),
+            action.CompareStartTime,
+            action.CompareEndTime);
     }
 }
