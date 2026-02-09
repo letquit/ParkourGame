@@ -47,7 +47,19 @@ public class ParkourControllerScript : MonoBehaviour
         if (!animationState.IsName(action.AnimationName))
             Debug.Log("Animation Name is Incorrect");
 
-        yield return new WaitForSeconds(animationState.length);
+        float timeCounter = 0f;
+        
+        while (timeCounter < animationState.length)
+        {
+            timeCounter += Time.deltaTime;
+
+            if (action.LookAtObstacle)
+            {
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, action.RequiredRotation, playerController.rotSpeed * Time.deltaTime);
+            }
+            
+            yield return null;
+        }
         
         playerController.SetControl(true);
         playerInAction = false;
