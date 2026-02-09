@@ -16,3 +16,7 @@ MonoBehaviour:
   minimumHeight: 0.5
   maximumHeight: 1
   lookAtObstacle: 1
+  allowTargetMatching: 1
+  compareBodyPart: 3
+  compareStartTime: 0.19
+  compareEndTime: 0.97

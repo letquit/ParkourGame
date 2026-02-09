@@ -20,8 +20,8 @@ public class PlayerController : MonoBehaviour
     public Vector3 surfaceCheckOffset;
     public LayerMask surfaceLayer;
     private bool onSurface;
-    [SerializeField] private float fallingSpeed;
-    [SerializeField] private Vector3 moveDir;
+    [SerializeField] public float fallingSpeed;
+    [SerializeField] public Vector3 moveDir;
 
     private void Update()
     {
