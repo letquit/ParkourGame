@@ -33,8 +33,8 @@ public class PlayerController : MonoBehaviour
     
     private void Update()
     {
-        if (PC && CC.enabled)
-            PlayerMovement();
+        // if (PC && CC.enabled)
+        //     PlayerMovement();
         if (!PC)
             return;
         
@@ -65,6 +65,7 @@ public class PlayerController : MonoBehaviour
         }
         velocity.y = fallingSpeed;
         
+        PlayerMovement();
         SurfaceCheck();
         animator.SetBool("onSurface", onSurface);
     }
