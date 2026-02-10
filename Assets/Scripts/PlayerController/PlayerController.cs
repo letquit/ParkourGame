@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawSphere(transform.TransformPoint(surfaceCheckOffset), surfaceCheckRadius);
     }
     
-    public IEnumerator PerformAction(string animationName, CompareTargetParameter ctp, Quaternion requiredRotation,
+    public IEnumerator PerformAction(string animationName, CompareTargetParameter ctp = null, Quaternion requiredRotation = new Quaternion(),
         bool lookAtObstacle = false, float parkourActionDelay = 0f)
     {
         playerInAction = true;
@@ -190,6 +190,11 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("movementValue", 0f);
             requiredRotation = transform.rotation;
         }
+    }
+
+    public void ResetRequiredRotation()
+    {
+        requiredRotation = transform.rotation;
     }
 
     public bool HasPlayerControl

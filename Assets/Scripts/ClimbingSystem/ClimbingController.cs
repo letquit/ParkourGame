@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ClimbingController : MonoBehaviour
 {
@@ -20,6 +21,12 @@ public class ClimbingController : MonoBehaviour
 
     private void Update()
     {
+        if (playerController.playerHanging && !playerController.playerInAction && Input.GetButton("Leave"))
+        {
+            StartCoroutine(JumpFromWall());
+            return;
+        }
+        
         if (Input.GetButton("Jump") && !playerController.playerInAction)
         {
             if (!playerController.playerHanging)
@@ -41,6 +48,12 @@ public class ClimbingController : MonoBehaviour
             }
             else
             {
+                // if (Input.GetButton("Leave") && !playerController.playerInAction)
+                // {
+                //     StartCoroutine(JumpFromWall());
+                //     return;
+                // }
+                
                 float horizontal = Mathf.Round(Input.GetAxisRaw("Horizontal"));
                 float vertical = Mathf.Round(Input.GetAxisRaw("Vertical"));
                 
@@ -148,5 +161,13 @@ public class ClimbingController : MonoBehaviour
 
         var handDirection = hand == AvatarTarget.RightHand ? ledge.right : -ledge.right;
         return ledge.position + ledge.forward * InOutValue + Vector3.up * UpDownValue - handDirection * LeftRightValue;
+    }
+
+    private IEnumerator JumpFromWall()
+    {
+        playerController.playerHanging = false;
+        yield return playerController.PerformAction("JumpFromWall");
+        playerController.ResetRequiredRotation();
+        playerController.SetControl(true);
     }
 }
