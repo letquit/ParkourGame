@@ -60,6 +60,12 @@ public class ClimbingController : MonoBehaviour
                 var inputDirection = new Vector2(horizontal, vertical);
 
                 if (playerController.playerInAction || inputDirection == Vector2.zero) return;
+
+                if (currentClimbPoint.mountPoint && inputDirection.y == 1)
+                {
+                    StartCoroutine(ClimbToTop());
+                    return;
+                }
                 
                 var neighbour = currentClimbPoint.GetNeighbour(inputDirection);
                 
@@ -167,6 +173,19 @@ public class ClimbingController : MonoBehaviour
     {
         playerController.playerHanging = false;
         yield return playerController.PerformAction("JumpFromWall");
+        playerController.ResetRequiredRotation();
+        playerController.SetControl(true);
+    }
+
+    private IEnumerator ClimbToTop()
+    {
+        playerController.playerHanging = false;
+        yield return playerController.PerformAction("ClimbToTop");
+        
+        playerController.EnableCC(true);
+        
+        yield return new WaitForSeconds(0.5f);
+        
         playerController.ResetRequiredRotation();
         playerController.SetControl(true);
     }
