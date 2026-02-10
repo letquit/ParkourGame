@@ -120,28 +120,31 @@ public class PlayerController : MonoBehaviour
     {
         playerInAction = true;
 
-        animator.CrossFade(animationName, 0.2f);
+        animator.CrossFadeInFixedTime(animationName, 0.2f);
         yield return null; // 等待 CrossFade 触发
 
         yield return new WaitUntil(() => !animator.IsInTransition(0));
 
         yield return null;
 
-        var currentState = animator.GetCurrentAnimatorStateInfo(0);
-        if (!currentState.IsName(animationName))
+        var animationState = animator.GetCurrentAnimatorStateInfo(0);
+        if (!animationState.IsName(animationName))
         {
             playerInAction = false;
             yield break;
         }
 
-        float animLength = currentState.length;
-        float timeCounter = 0f;
+        float animLength = animationState.length;
+        float rotateStartTime = ctp != null ? ctp.startTime : 0f;
+        float timerCounter = 0f;
 
-        while (timeCounter < animLength)
+        while (timerCounter < animLength)
         {
-            timeCounter += Time.deltaTime;
+            timerCounter += Time.deltaTime;
 
-            if (lookAtObstacle)
+            float normalizedTimerCounter = timerCounter / animationState.length;
+
+            if (lookAtObstacle && normalizedTimerCounter > rotateStartTime)
             {
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, requiredRotation, rotSpeed * Time.deltaTime);
             }
@@ -153,7 +156,7 @@ public class PlayerController : MonoBehaviour
                 CompareTarget(ctp);
             }
 
-            if (animator.IsInTransition(0) && timeCounter > 0.5f)
+            if (animator.IsInTransition(0) && timerCounter > 0.5f)
             {
                 break;
             }
