@@ -21,24 +21,40 @@ public class ClimbingController : MonoBehaviour
 
     private void Update()
     {
+        if (playerController.playerHanging && !playerController.playerInAction)
+        {
+            var st = playerController.animator.GetCurrentAnimatorStateInfo(0);
+        }
+        
         if (playerController.playerHanging && !playerController.playerInAction && Input.GetButton("Leave"))
         {
+            if (currentClimbPoint != null && currentClimbPoint.mountPoint)
+            {
+                var downNeighbour = currentClimbPoint.GetNeighbour(Vector2.down);
+                if (downNeighbour != null && downNeighbour.climbingPoint != null)
+                {
+                    currentClimbPoint = downNeighbour.climbingPoint;
+                    InOutValue = 0.1f;
+                    UpDownValue = -0.44f;
+                    LeftRightValue = 0.25f;
+                    StartCoroutine(ClimbToLedge("DropToFreeHang", currentClimbPoint.transform, 0.41f, 0.54f,
+                        playerHandOffset: new Vector3(InOutValue, UpDownValue, LeftRightValue)));
+                    return;
+                }
+            }
             StartCoroutine(JumpFromWall());
             return;
         }
-        
-        if (Input.GetButton("Jump") && !playerController.playerInAction)
+
+        if (Input.GetButtonDown("Jump") && !playerController.playerInAction)
         {
             if (!playerController.playerHanging)
             {
                 if (ec.CheckClimbing(transform.forward, out RaycastHit climbInfo))
                 {
                     currentClimbPoint = climbInfo.transform.GetComponent<ClimbingPoint>();
-                    
+
                     playerController.SetControl(false);
-                    // InOutValue = -0.28f;
-                    // UpDownValue = -0.15f;
-                    // LeftRightValue = 0.15f;
                     InOutValue = -0.23f;
                     UpDownValue = -0.09f;
                     LeftRightValue = 0.15f;
@@ -48,30 +64,27 @@ public class ClimbingController : MonoBehaviour
             }
             else
             {
-                // if (Input.GetButton("Leave") && !playerController.playerInAction)
-                // {
-                //     StartCoroutine(JumpFromWall());
-                //     return;
-                // }
-                
                 float horizontal = Mathf.Round(Input.GetAxisRaw("Horizontal"));
                 float vertical = Mathf.Round(Input.GetAxisRaw("Vertical"));
-                
                 var inputDirection = new Vector2(horizontal, vertical);
+                
+                if (playerController.playerInAction || inputDirection == Vector2.zero)
+                {
+                    return;
+                }
 
-                if (playerController.playerInAction || inputDirection == Vector2.zero) return;
-
-                if (currentClimbPoint.mountPoint && inputDirection.y == 1)
+                if (currentClimbPoint != null && currentClimbPoint.mountPoint && inputDirection.y == 1)
                 {
                     StartCoroutine(ClimbToTop());
                     return;
                 }
-                
-                var neighbour = currentClimbPoint.GetNeighbour(inputDirection);
-                
-                if (neighbour == null) return;
 
-                if (neighbour.connectionType == ConnectionType.Jump && Input.GetButton("Jump"))
+                var neighbour = currentClimbPoint.GetNeighbour(inputDirection);
+
+                if (neighbour == null)
+                    return;
+
+                if (neighbour.connectionType == ConnectionType.Jump && Input.GetButtonDown("Jump"))
                 {
                     if (neighbour.climbingPoint != null)
                     {
@@ -138,6 +151,21 @@ public class ClimbingController : MonoBehaviour
                 }
             }
         }
+
+        if (!playerController.playerHanging && !playerController.playerInAction && Input.GetButton("Leave"))
+        {
+            if (ec.CheckDropClimbPoint(out RaycastHit DropHit))
+            {
+                currentClimbPoint = GetNearestClimbingPoint(DropHit.transform, DropHit.point);
+
+                playerController.SetControl(false);
+                InOutValue = 0.15f;
+                UpDownValue = 0.01f;
+                LeftRightValue = 0.25f;
+                StartCoroutine(ClimbToLedge("DropToFreeHang", currentClimbPoint.transform, 0.41f, 0.54f,
+                    playerHandOffset: new Vector3(InOutValue, UpDownValue, LeftRightValue)));
+            }
+        }
     }
 
     private IEnumerator ClimbToLedge(string animationName, Transform ledgePoint, float compareStartTime,
@@ -166,7 +194,7 @@ public class ClimbingController : MonoBehaviour
             : new Vector3(InOutValue, UpDownValue, LeftRightValue);
 
         var handDirection = hand == AvatarTarget.RightHand ? ledge.right : -ledge.right;
-        return ledge.position + ledge.forward * InOutValue + Vector3.up * UpDownValue - handDirection * LeftRightValue;
+        return ledge.position + ledge.forward * offsetValue.x + Vector3.up * offsetValue.y - handDirection * offsetValue.z;
     }
 
     private IEnumerator JumpFromWall()
@@ -188,5 +216,27 @@ public class ClimbingController : MonoBehaviour
         
         playerController.ResetRequiredRotation();
         playerController.SetControl(true);
+    }
+
+    private ClimbingPoint GetNearestClimbingPoint(Transform dropClimbPoint, Vector3 hitpoint)
+    {
+        var points = dropClimbPoint.GetComponentsInChildren<ClimbingPoint>();
+
+        ClimbingPoint nearestPoint = null;
+        
+        float nearestPointDistance = Mathf.Infinity;
+
+        foreach (var point in points)
+        {
+            float distance = Vector3.Distance(point.transform.position, hitpoint);
+
+            if (distance < nearestPointDistance)
+            {
+                nearestPoint = point;
+                nearestPointDistance = distance;
+            }
+        }
+        
+        return nearestPoint;
     }
 }

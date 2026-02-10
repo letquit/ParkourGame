@@ -121,15 +121,17 @@ public class PlayerController : MonoBehaviour
         playerInAction = true;
 
         animator.CrossFadeInFixedTime(animationName, 0.2f);
-        yield return null; // 等待 CrossFade 触发
+        yield return null;
 
         yield return new WaitUntil(() => !animator.IsInTransition(0));
 
         yield return null;
 
         var animationState = animator.GetCurrentAnimatorStateInfo(0);
+        
         if (!animationState.IsName(animationName))
         {
+            Debug.LogWarning($"[Action] Cancelled, state mismatch. wanted={animationName}");
             playerInAction = false;
             yield break;
         }
@@ -163,7 +165,7 @@ public class PlayerController : MonoBehaviour
 
             yield return null;
         }
-
+        
         yield return new WaitForSeconds(parkourActionDelay);
 
         playerInAction = false;
