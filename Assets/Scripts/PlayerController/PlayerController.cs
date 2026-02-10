@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -11,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public float rotSpeed = 600f;
     private Quaternion requiredRotation;
     private bool PC = true;
+    public bool playerInAction { get; private set; }
 
     [Header("Player Animator")] 
     public Animator animator;
@@ -22,6 +24,7 @@ public class PlayerController : MonoBehaviour
     public LayerMask surfaceLayer;
     private bool onSurface;
     public bool playerOnLedge { get; set; }
+    public bool playerHanging { get; set; }
     public LedgeInfo LedgeInfo { get; set; }
     [SerializeField] public float fallingSpeed;
     [SerializeField] public Vector3 moveDir;
@@ -33,6 +36,9 @@ public class PlayerController : MonoBehaviour
         if (PC && CC.enabled)
             PlayerMovement();
         if (!PC)
+            return;
+        
+        if (playerHanging)
             return;
         
         velocity = Vector3.zero;
@@ -107,6 +113,68 @@ public class PlayerController : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(transform.TransformPoint(surfaceCheckOffset), surfaceCheckRadius);
     }
+    
+    public IEnumerator PerformAction(string animationName, CompareTargetParameter ctp, Quaternion requiredRotation,
+        bool lookAtObstacle = false, float parkourActionDelay = 0f)
+    {
+        playerInAction = true;
+
+        animator.CrossFade(animationName, 0.2f);
+        yield return null; // 等待 CrossFade 触发
+
+        yield return new WaitUntil(() => !animator.IsInTransition(0));
+
+        yield return null;
+
+        var currentState = animator.GetCurrentAnimatorStateInfo(0);
+        if (!currentState.IsName(animationName))
+        {
+            playerInAction = false;
+            yield break;
+        }
+
+        float animLength = currentState.length;
+        float timeCounter = 0f;
+
+        while (timeCounter < animLength)
+        {
+            timeCounter += Time.deltaTime;
+
+            if (lookAtObstacle)
+            {
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, requiredRotation, rotSpeed * Time.deltaTime);
+            }
+
+            if (ctp != null && 
+                !animator.IsInTransition(0) && 
+                animator.GetCurrentAnimatorStateInfo(0).IsName(animationName))
+            {
+                CompareTarget(ctp);
+            }
+
+            if (animator.IsInTransition(0) && timeCounter > 0.5f)
+            {
+                break;
+            }
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(parkourActionDelay);
+
+        playerInAction = false;
+    }
+
+    private void CompareTarget(CompareTargetParameter compareTargetParameter)
+    {
+        animator.MatchTarget(
+            compareTargetParameter.position,
+            transform.rotation,
+            compareTargetParameter.bodyPart,
+            new MatchTargetWeightMask(compareTargetParameter.positionWeight, 0),
+            compareTargetParameter.startTime,
+            compareTargetParameter.endTime);
+    }
 
     public void SetControl(bool hasControl)
     {
@@ -125,4 +193,13 @@ public class PlayerController : MonoBehaviour
         get => PC;
         set => SetControl(value);
     }
+}
+
+public class CompareTargetParameter
+{
+    public Vector3 position;
+    public AvatarTarget bodyPart;
+    public Vector3 positionWeight;
+    public float startTime;
+    public float endTime;
 }

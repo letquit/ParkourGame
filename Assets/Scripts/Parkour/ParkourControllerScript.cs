@@ -7,7 +7,6 @@ public class ParkourControllerScript : MonoBehaviour
 {
     public EnvironmentChecker environmentChecker;
     public float normalizedTransitionDuration = 0.2f;
-    private bool playerInAction;
     public Animator animator;
     public PlayerController playerController;
     [SerializeField] private NewParkourAction jumpDownParkourAction;
@@ -17,7 +16,7 @@ public class ParkourControllerScript : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetButton("Jump") && !playerInAction)
+        if (Input.GetButton("Jump") && !playerController.playerInAction)
         {
             var hitData = environmentChecker.CheckObstacle();
             
@@ -35,7 +34,7 @@ public class ParkourControllerScript : MonoBehaviour
             }
         }
 
-        if (playerController.playerOnLedge && !playerInAction && Input.GetButtonDown("Jump"))
+        if (playerController.playerOnLedge && !playerController.playerInAction && Input.GetButtonDown("Jump"))
         {
             if (playerController.LedgeInfo.angle <= 50)
             {
@@ -47,64 +46,25 @@ public class ParkourControllerScript : MonoBehaviour
 
     private IEnumerator PerformParkourAction(NewParkourAction action)
     {
-        playerInAction = true;
         playerController.SetControl(false);
 
-        animator.CrossFade(action.AnimationName, normalizedTransitionDuration);
-        yield return null; // 等待 CrossFade 触发
-
-        yield return new WaitUntil(() => !animator.IsInTransition(0));
-
-        yield return null;
-
-        var currentState = animator.GetCurrentAnimatorStateInfo(0);
-        if (!currentState.IsName(action.AnimationName))
+        CompareTargetParameter compareTargetParameter = null;
+        if (action.AllowTargetMatching)
         {
-            Debug.LogWarning($"Expected animation '{action.AnimationName}' but got '{currentState.fullPathHash}'");
-            playerController.SetControl(true);
-            playerInAction = false;
-            yield break;
+            compareTargetParameter = new CompareTargetParameter
+            {
+                position = action.ComparePosition,
+                bodyPart = action.CompareBodyPart,
+                positionWeight = action.ComparePositionWeight,
+                startTime = action.CompareStartTime,
+                endTime = action.CompareEndTime
+            };
         }
 
-        float animLength = currentState.length;
-        float timeCounter = 0f;
-
-        while (timeCounter < animLength)
-        {
-            timeCounter += Time.deltaTime;
-
-            if (action.LookAtObstacle)
-            {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, action.RequiredRotation, playerController.rotSpeed * Time.deltaTime);
-            }
-
-            if (action.AllowTargetMatching && 
-                !animator.IsInTransition(0) && 
-                animator.GetCurrentAnimatorStateInfo(0).IsName(action.AnimationName))
-            {
-                CompareTarget(action);
-            }
-
-            if (animator.IsInTransition(0) && timeCounter > 0.5f)
-            {
-                break;
-            }
-
-            yield return null;
-        }
-
-        yield return new WaitForSeconds(action.ParkourActionDelay);
+        yield return playerController.PerformAction(action.AnimationName, compareTargetParameter,
+            action.RequiredRotation, action.LookAtObstacle, action.ParkourActionDelay);
         
-        // 在 yield 循环后，恢复控制权前
         playerController.SetControl(true);
-
-        // 重置PlayerController物理状态，让它跟动画驱动的结果完全一致
-        // playerController.fallingSpeed = 0f; // 让角色不再有垂直下落速度
-        // playerController.moveDir = Vector3.zero; // 防止有残余运动向量
-        
-        // transform.position = action.ComparePosition;
-
-        playerInAction = false;
     }
 
     private void CompareTarget(NewParkourAction action)
