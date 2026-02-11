@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// 攀爬控制器，处理玩家的攀爬相关逻辑，包括攀爬点检测、移动、跳跃等操作
+/// </summary>
 public class ClimbingController : MonoBehaviour
 {
     private EnvironmentChecker ec;
@@ -14,18 +17,20 @@ public class ClimbingController : MonoBehaviour
     public float UpDownValue;
     public float LeftRightValue;
 
+    /// <summary>
+    /// 初始化组件引用
+    /// </summary>
     private void Awake()
     {
         ec = GetComponent<EnvironmentChecker>();
     }
 
+    /// <summary>
+    /// 更新攀爬状态和处理用户输入
+    /// </summary>
     private void Update()
     {
-        if (playerController.playerHanging && !playerController.playerInAction)
-        {
-            var st = playerController.animator.GetCurrentAnimatorStateInfo(0);
-        }
-        
+        // 处理离开攀爬状态的输入
         if (playerController.playerHanging && !playerController.playerInAction && Input.GetButton("Leave"))
         {
             if (currentClimbPoint != null && currentClimbPoint.mountPoint)
@@ -46,6 +51,7 @@ public class ClimbingController : MonoBehaviour
             return;
         }
 
+        // 处理跳跃按钮输入，实现攀爬功能
         if (Input.GetButtonDown("Jump") && !playerController.playerInAction)
         {
             if (!playerController.playerHanging)
@@ -73,6 +79,7 @@ public class ClimbingController : MonoBehaviour
                     return;
                 }
 
+                // 处理向上攀爬到顶部
                 if (currentClimbPoint != null && currentClimbPoint.mountPoint && inputDirection.y == 1)
                 {
                     StartCoroutine(ClimbToTop());
@@ -84,6 +91,7 @@ public class ClimbingController : MonoBehaviour
                 if (neighbour == null)
                     return;
 
+                // 处理跳跃类型的连接
                 if (neighbour.connectionType == ConnectionType.Jump && Input.GetButtonDown("Jump"))
                 {
                     if (neighbour.climbingPoint != null)
@@ -123,6 +131,7 @@ public class ClimbingController : MonoBehaviour
                         }
                     }
                 }
+                // 处理移动类型的连接
                 else if (neighbour.connectionType == ConnectionType.Move)
                 {
                     if (neighbour.climbingPoint != null)
@@ -152,6 +161,7 @@ public class ClimbingController : MonoBehaviour
             }
         }
 
+        // 处理从高处下降到攀爬状态
         if (!playerController.playerHanging && !playerController.playerInAction && Input.GetButton("Leave"))
         {
             if (ec.CheckDropClimbPoint(out RaycastHit DropHit))
@@ -168,6 +178,16 @@ public class ClimbingController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 执行攀爬到指定位置的协程
+    /// </summary>
+    /// <param name="animationName">要播放的动画名称</param>
+    /// <param name="ledgePoint">目标边缘点的变换组件</param>
+    /// <param name="compareStartTime">动画比较开始时间</param>
+    /// <param name="compareEndTime">动画比较结束时间</param>
+    /// <param name="hand">使用的手部目标（默认为右手）</param>
+    /// <param name="playerHandOffset">玩家手部偏移量</param>
+    /// <returns>协程枚举器</returns>
     private IEnumerator ClimbToLedge(string animationName, Transform ledgePoint, float compareStartTime,
         float compareEndTime, AvatarTarget hand = AvatarTarget.RightHand, Vector3? playerHandOffset = null)
     {
@@ -187,6 +207,13 @@ public class ClimbingController : MonoBehaviour
         playerController.playerHanging = true;
     }
 
+    /// <summary>
+    /// 设置手部在边缘上的位置
+    /// </summary>
+    /// <param name="ledge">边缘变换组件</param>
+    /// <param name="hand">手部目标</param>
+    /// <param name="playerHandOffset">玩家手部偏移量</param>
+    /// <returns>计算后的手部世界位置</returns>
     private Vector3 SetHandPosition(Transform ledge, AvatarTarget hand, Vector3? playerHandOffset)
     {
         var offsetValue = (playerHandOffset != null)
@@ -197,6 +224,10 @@ public class ClimbingController : MonoBehaviour
         return ledge.position + ledge.forward * offsetValue.x + Vector3.up * offsetValue.y - handDirection * offsetValue.z;
     }
 
+    /// <summary>
+    /// 从墙壁上跳下的协程
+    /// </summary>
+    /// <returns>协程枚举器</returns>
     private IEnumerator JumpFromWall()
     {
         playerController.playerHanging = false;
@@ -205,6 +236,10 @@ public class ClimbingController : MonoBehaviour
         playerController.SetControl(true);
     }
 
+    /// <summary>
+    /// 攀爬到顶部的协程
+    /// </summary>
+    /// <returns>协程枚举器</returns>
     private IEnumerator ClimbToTop()
     {
         playerController.playerHanging = false;
@@ -218,6 +253,12 @@ public class ClimbingController : MonoBehaviour
         playerController.SetControl(true);
     }
 
+    /// <summary>
+    /// 获取最近的攀爬点
+    /// </summary>
+    /// <param name="dropClimbPoint">掉落攀爬点的变换组件</param>
+    /// <param name="hitpoint">碰撞点位置</param>
+    /// <returns>距离碰撞点最近的攀爬点</returns>
     private ClimbingPoint GetNearestClimbingPoint(Transform dropClimbPoint, Vector3 hitpoint)
     {
         var points = dropClimbPoint.GetComponentsInChildren<ClimbingPoint>();
